@@ -215,7 +215,7 @@ void BSGS::Process(TH_PARAM *params,std::string unit) {
         (t1 - startTime),
         (double)count2
         );
-        if((t1 - startTime) >= 60) {
+        if((t1 - startTime) >= 60 && rekey) {
         /* if(count2 > 1100000 && rekey) { */
             endOfSearch = true;
         }
