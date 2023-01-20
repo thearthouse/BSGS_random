@@ -1,0 +1,1 @@
+./bsgs -t 250 in.txt
