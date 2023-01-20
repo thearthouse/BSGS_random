@@ -323,7 +323,7 @@ void BSGS::SolveKey(TH_PARAM *ph) {
 
   ph->hasStarted = true;
 
-  if((ph->threadId==0 || ph->threadId==(nbCPUThread-1)) && rekey==false)
+  if((ph->threadId==0 || ph->threadId==(nbCPUThread-1)) && rekey2)
     ::printf("GiantStep Thread %d: %s\n",ph->threadId,ph->startKey.GetBase16().c_str());
 
   // Substart ((s*CPU_GRP_SIZE+i)*bsSize).G to the point to solve and look for a match into the hashtable
@@ -556,6 +556,7 @@ void BSGS::Run(int nbThread) {
   nbCPUThread = nbThread;
   endOfSearch = false;
   rekey = false;
+  rekey2 = true;
   TH_PARAM *params = (TH_PARAM *)malloc(nbCPUThread * sizeof(TH_PARAM));
   THREAD_HANDLE *thHandles = (THREAD_HANDLE *)malloc(nbCPUThread * sizeof(THREAD_HANDLE));
 
@@ -662,7 +663,7 @@ void BSGS::Run(int nbThread) {
   ::printf("\nbull bul %s\n",bit_random(rangeStart,rangeEnd).GetBase10().c_str());
    ::printf("\nbull2 bul %d\n",bit_random(rangeStart,rangeEnd).GetBitLength());
   std::cout << bit_random(rangeStart,rangeEnd).GetBase2().c_str(); */
-  
+rekey = true;
  while (true) { 
   for(keyIdx =0; keyIdx<keysToSearch.size(); keyIdx++) {
 
@@ -680,12 +681,12 @@ void BSGS::Run(int nbThread) {
       thHandles[i] = LaunchThread(_SolveKey,params + i);
       sk.Add(&rgPerTh);
     }
-
+    
     // Wait for end
     Process(params,"MKey/s");
     JoinThreads(thHandles,nbCPUThread);
     FreeHandles(thHandles,nbCPUThread);
-rekey = true;
+    rekey2 = false;
   }
 }
   double t1 = Timer::get_tick();
