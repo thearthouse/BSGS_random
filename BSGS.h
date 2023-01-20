@@ -108,6 +108,7 @@ private:
   int keyIdx;
   bool endOfSearch;
   bool rekey;
+  bool rekey2;
 
 };
 
