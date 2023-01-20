@@ -166,7 +166,8 @@ void BSGS::FillBabySteps(TH_PARAM *ph) {
 #ifdef WIN64
     ::printf("BabyStep Thread %d: 0x%016I64X -> 0x%016I64X\n",ph->threadId,ph->startKey.bits64[0],ph->startKey.bits64[0]+kPerThread-1);
 #else
-    ::printf("BabyStep Thread %d: 0x%" PRIx64 " -> 0x%" PRIx64 "\n",ph->threadId,ph->startKey.bits64[0],ph->startKey.bits64[0]+kPerThread-1);
+    if((ph->threadId==0 || ph->threadId==(nbCPUThread-1)))
+        ::printf("BabyStep Thread %d: 0x%" PRIx64 " -> 0x%" PRIx64 "\n",ph->threadId,ph->startKey.bits64[0],ph->startKey.bits64[0]+kPerThread-1);
 #endif
 
   // Baby Step Hashtable contains G,2G,3G,.....,(bsSize).G
@@ -476,7 +477,8 @@ void BSGS::SortTable(TH_PARAM *ph) {
 
   int thId = ph->threadId;
   counters[thId] = 0;
-  ::printf("Sort Thread %d: %08X -> %08X\n",ph->threadId,ph->sortStart,ph->sortEnd);
+  if((ph->threadId==0 || ph->threadId==(nbCPUThread-1)))
+      ::printf("Sort Thread %d: %08X -> %08X\n",ph->threadId,ph->sortStart,ph->sortEnd);
   ph->hasStarted = true;
 
   for(uint32_t i=ph->sortStart;i<ph->sortEnd;i++) {
